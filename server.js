@@ -1,5 +1,5 @@
+require('dotenv').config(); // Ensure this is at the top to load environment variables
 const express = require('express');
-const bodyParser = require('body-parser');
 const http = require('http');
 const socketIo = require('socket.io');
 
@@ -7,9 +7,16 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server); // Setup Socket.IO
 
-// Middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Middleware to parse the body
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Routes
+const userRoutes = require('./routes/users'); // Make sure the path is correct based on your project structure
+const friendRoutes = require('./routes/friends');
+app.use('/users', userRoutes);
+app.use('/friends', friendRoutes);
+
 
 // Test API Endpoint
 app.get('/', (req, res) => {
@@ -23,6 +30,12 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('Client disconnected');
   });
+});
+
+// Error handling middleware
+app.use((error, req, res, next) => {
+  console.error(error.stack);
+  res.status(500).send('Something broke!');
 });
 
 // Start server
