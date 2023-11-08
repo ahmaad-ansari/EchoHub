@@ -1,108 +1,124 @@
-// src/components/Register.js
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
+
 import {
-  Center,
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  VStack,
-  useToast,
-} from '@chakra-ui/react';
-import { Link } from 'react-router-dom'; // Import Link for navigation
+    Center,
+    Box,
+    Button,
+    FormControl,
+    FormLabel,
+    Input,
+    VStack,
+    useToast,
+    Text,
+    Link,
+} from "@chakra-ui/react";
 
-const Register = ({ onRegisterSuccess }) => { // Update the component name
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const toast = useToast();
+const Register = () => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const toast = useToast();
 
-  const handleRegistration = async (event) => {
-    event.preventDefault(); // Prevent the default form submit action
-  
-    try {
-      // Call your backend API endpoint for registration
-      const response = await fetch('http://localhost:5000/users/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-  
-      const data = await response.json(); // Try to parse the response
-  
-      if (!response.ok) {
-        // If the HTTP status code is not successful, throw an error with the server's message
-        throw new Error(data.message || 'Failed to register');
-      }
-  
-      onRegisterSuccess(data.token); // Call the onRegisterSuccess function passed as a prop with the token
-  
-      // Reset form state
-      setUsername('');
-      setPassword('');
-  
-      // Show success toast
-      toast({
-        title: 'Registration successful',
-        description: 'You have successfully registered.',
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-      });
-    } catch (error) {
-      // Show error toast with the server's error message
-      toast({
-        title: 'An error occurred.',
-        description: error.toString(),
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-      });
-    }
-  };
+    const handleRegister = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await fetch(
+                "http://localhost:5000/users/register",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ username, password }),
+                }
+            );
 
-  return (
-    <Center height="100vh">
-      <Box
-        p={8}
-        maxWidth="400px"
-        borderWidth={1}
-        borderRadius={8}
-        boxShadow="lg"
-      >
-        <form onSubmit={handleRegistration}>
-          <VStack spacing={4}>
-            <FormControl id="username" isRequired>
-              <FormLabel>Username</FormLabel>
-              <Input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </FormControl>
-            <FormControl id="password" isRequired>
-              <FormLabel>Password</FormLabel>
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </FormControl>
-            <Button
-              type="submit"
-              width="full"
-              mt={4}
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to register");
+            }
+
+            // Show success toast
+            toast({
+                title: "Registration successful",
+                description: "Your account has been created.",
+                status: "success",
+                duration: 9000,
+                isClosable: true,
+            });
+
+            // Reset form state
+            setUsername("");
+            setPassword("");
+
+            // Redirect to login or another appropriate action
+            // history.push('/login');
+        } catch (error) {
+            toast({
+                title: "Registration failed",
+                description: error.toString(),
+                status: "error",
+                duration: 9000,
+                isClosable: true,
+            });
+        }
+    };
+
+    return (
+        <Center height="100vh">
+            <Box
+                p={8}
+                maxWidth="400px"
+                borderWidth={1}
+                borderRadius={8}
+                boxShadow="lg"
             >
-              Register
-            </Button>
-          </VStack>
-        </form>
-        <Link to="/login">Login</Link> {/* Provide a link to the login page */}
-      </Box>
-    </Center>
-  );
+                <Text
+                    mb={4}
+                    fontSize="3xl"
+                    fontWeight="bold"
+                    textAlign="center"
+                >
+                    Register
+                </Text>
+                <form onSubmit={handleRegister}>
+                    <VStack spacing={4}>
+                        <FormControl id="username" isRequired>
+                            <FormLabel>Username</FormLabel>
+                            <Input
+                                type="text"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                        </FormControl>
+                        <FormControl id="password" isRequired>
+                            <FormLabel>Password</FormLabel>
+                            <Input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </FormControl>
+                        <Button type="submit" width="full" mt={4}>
+                            Register
+                        </Button>
+                    </VStack>
+                </form>
+                <Text mt={6} textAlign="center">
+                    Already have an account?{" "}
+                    <Link
+                        as={RouterLink}
+                        to="/login"
+                        color="blue.500"
+                        fontWeight="bold"
+                    >
+                        Log in
+                    </Link>
+                </Text>
+            </Box>
+        </Center>
+    );
 };
 
-export default Register; // Export the component
+export default Register;
