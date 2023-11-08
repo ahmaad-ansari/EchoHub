@@ -1,36 +1,66 @@
 import React from 'react';
-import { Flex, Button, useToast } from '@chakra-ui/react';
+import { Box, Flex, Text, Button, IconButton, useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import { SettingsIcon } from '@chakra-ui/icons';
 
 const Navbar = () => {
-  const toast = useToast();
   const navigate = useNavigate();
+  const toast = useToast();
+
 
   const handleLogout = () => {
-    // Clear user token and profile data from localStorage
+    // Clear user token and profile data from storage
     localStorage.removeItem('token');
-    
-    // Optionally, add more logic for a logout process like clearing the state, etc.
-    
-    // Show a toast notification
-    toast({
-      title: 'Logout successful.',
-      description: "You've been logged out.",
-      status: 'info',
-      duration: 5000,
-      isClosable: true,
-    });
-    
     // Redirect to login page
     navigate('/login');
+    // Show a toast notification
+    toast({
+        title: 'Logout successful.',
+        description: "You've been logged out.",
+        status: 'info',
+        duration: 5000,
+        isClosable: true,
+    });
+    window.location.reload(false);
+  };
+
+  const goToSettings = () => {
+    // Navigate to settings page
+    navigate('/settings');
+  };
+
+  const goToHome = () => {
+    // Navigate to settings page
+    navigate('/');
   };
 
   return (
-    <Flex bg="blue.500" color="white" p={4} justifyContent="space-between" alignItems="center">
-      {/* Other content */}
-      <Button onClick={handleLogout}>Logout</Button>
+    <Flex bg="blue.500" color="white" justifyContent="space-between" alignItems="center" p={4}>
+      <Button onClick={goToHome} colorScheme="blue">
+        <Text fontSize="lg" fontWeight="bold">
+            EchoHub
+        </Text>
+      </Button>
+      <Box>
+        <IconButton
+          icon={<SettingsIcon />}
+          onClick={goToSettings}
+          colorScheme="blue"
+          marginRight="4"
+          aria-label="Settings"
+        />
+        
+        <Button onClick={handleLogout} colorScheme="blue">
+          Logout
+        </Button>
+      </Box>
     </Flex>
   );
 };
 
 export default Navbar;
+
+
+
+
+

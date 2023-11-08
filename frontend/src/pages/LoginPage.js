@@ -10,6 +10,7 @@ const LoginPage = () => {
     // Assuming you are storing the token in local storage
     localStorage.setItem('token', token);
     navigate('/home'); // Navigate to the home page upon successful login
+    window.location.reload(false);
   };
 
   return (
