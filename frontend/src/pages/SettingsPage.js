@@ -1,13 +1,9 @@
-// src/pages/SettingsPage.js
-import React from 'react';
-import ProfileSettings from '../components/ProfileSettings';
+import React, { useState, useEffect } from 'react';
+import { Box, useToast } from '@chakra-ui/react';
+import ProfileSettings from '../components/ProfileSettings'; // Adjust the path as necessary
 
 const SettingsPage = () => {
-  // Implement functions to update profile settings
-
-  return (
-    <ProfileSettings /* props needed */ />
-  );
+    return <ProfileSettings />;
 };
 
 export default SettingsPage;

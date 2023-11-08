@@ -88,6 +88,7 @@ const Login = ({ onLoginSuccess }) => {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter username"
               />
             </FormControl>
             <FormControl id="password" isRequired>
@@ -96,6 +97,7 @@ const Login = ({ onLoginSuccess }) => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
               />
             </FormControl>
             <Button

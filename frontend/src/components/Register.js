@@ -98,6 +98,7 @@ const Register = () => {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter username"
               />
             </FormControl>
             <FormControl id="password" isRequired>
@@ -106,6 +107,7 @@ const Register = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
               />
             </FormControl>
             <FormControl id="confirm-password" isRequired>
@@ -114,6 +116,7 @@ const Register = () => {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm password"
               />
             </FormControl>
             <Button
