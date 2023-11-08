@@ -73,7 +73,8 @@ router.post('/login', async (req, res) => {
             expiresIn: '1h', // Token expires in 1 hour
         });
 
-        res.json({ token });
+        // res.json({ token: token, username: user.username, user_Id: user.user_id });
+        res.json({ token: token, user_id: user.rows[0].user_id, username: user.rows[0].username });
     } catch (error) {
         console.error(error.message);
         res.status(500).send('Server error');
@@ -140,5 +141,23 @@ router.delete('/delete', auth, async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
+// GET /users/all
+router.get('/all', auth, async (req, res) => {
+    const user_id = req.user.user_id; // Authenticated user ID from the token
+    try {
+        const users = await pool.query(
+            'SELECT user_id, username FROM users WHERE user_id != $1',
+            [user_id]
+        );
+        res.json(users.rows);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server error');
+    }
+});
+
+
+
 
 module.exports = router;

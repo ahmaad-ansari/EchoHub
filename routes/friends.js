@@ -3,10 +3,9 @@ const router = express.Router();
 const pool = require('../db/index'); // Adjust the path as necessary
 const auth = require('../middleware/auth');
 
-// POST /friends/request - Send a friend request
 router.post('/request', auth, async (req, res) => {
     const { to_user_id } = req.body; // ID of the user to whom the request is sent
-    const from_user_id = req.user; // ID of the user sending the request, obtained from auth middleware
+    const from_user_id = req.user.user_id; // ID of the user sending the request, obtained from auth middleware
 
     try {
         // Prevent sending a request to oneself
@@ -40,7 +39,7 @@ router.post('/request', auth, async (req, res) => {
 // POST /friends/accept - Accept a friend request
 router.post('/accept', auth, async (req, res) => {
     const { request_id } = req.body; // ID of the friend request
-    const user_id = req.user; // Authenticated user ID from the token
+    const user_id = req.user.user_id; // Authenticated user ID from the token
 
     try {
         // Begin a transaction
@@ -79,7 +78,7 @@ router.post('/accept', auth, async (req, res) => {
 // POST /friends/reject - Reject a friend request
 router.post('/reject', auth, async (req, res) => {
     const { request_id } = req.body; // ID of the friend request
-    const user_id = req.user; // Authenticated user ID from the token
+    const user_id = req.user.user_id; // Authenticated user ID from the token
 
     try {
         // Fetch the friend request to ensure it's valid and directed to the authenticated user
@@ -107,7 +106,7 @@ router.post('/reject', auth, async (req, res) => {
 
 // GET /friends - List all friends
 router.get('/', auth, async (req, res) => {
-    const user_id = req.user; // Authenticated user ID from the token
+    const user_id = req.user.user_id; // Authenticated user ID from the token
 
     try {
         // Fetch all accepted friend requests where the user is either the sender or receiver
@@ -131,7 +130,7 @@ router.get('/', auth, async (req, res) => {
 
 // GET /friends/requests - List all friend requests
 router.get('/requests', auth, async (req, res) => {
-    const user_id = req.user; // Authenticated user ID from the token
+    const user_id = req.user.user_id; // Authenticated user ID from the token
 
     try {
         // Fetch all pending friend requests sent by or to the user
@@ -152,8 +151,5 @@ router.get('/requests', auth, async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
-
-
-
 
 module.exports = router;

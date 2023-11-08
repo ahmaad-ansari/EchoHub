@@ -7,10 +7,14 @@ const Navbar = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
+  // Retrieve the username from localStorage
+  const username = localStorage.getItem('username');
 
   const handleLogout = () => {
     // Clear user token and profile data from storage
     localStorage.removeItem('token');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('username');
     // Redirect to login page
     navigate('/login');
     // Show a toast notification
@@ -21,7 +25,6 @@ const Navbar = () => {
         duration: 5000,
         isClosable: true,
     });
-    window.location.reload(false);
   };
 
   const goToSettings = () => {
@@ -35,32 +38,31 @@ const Navbar = () => {
   };
 
   return (
-    <Flex bg="blue.500" color="white" justifyContent="space-between" alignItems="center" p={4}>
-      <Button onClick={goToHome} colorScheme="blue">
+    <Flex bg="blue.800" color="white" justifyContent="space-between" alignItems="center" p={4}>
+      <Button onClick={goToHome} colorScheme="">
         <Text fontSize="lg" fontWeight="bold">
             EchoHub
         </Text>
       </Button>
-      <Box>
+      
+      <Flex alignItems="center">
+        <Text fontSize="md" mr={4}>
+          {username ? `Hello, ${username}` : 'Not logged in'}
+        </Text>
         <IconButton
           icon={<SettingsIcon />}
           onClick={goToSettings}
-          colorScheme="blue"
+          colorScheme="gray"
           marginRight="4"
           aria-label="Settings"
         />
         
-        <Button onClick={handleLogout} colorScheme="blue">
+        <Button onClick={handleLogout} colorScheme="gray">
           Logout
         </Button>
-      </Box>
+      </Flex>
     </Flex>
   );
 };
 
 export default Navbar;
-
-
-
-
-

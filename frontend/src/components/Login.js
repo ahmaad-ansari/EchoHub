@@ -43,6 +43,8 @@ const Login = ({ onLoginSuccess }) => {
       }
       
       localStorage.setItem('token', data.token); // Save the token
+      localStorage.setItem('user_id', data.user_id); // Save the token
+      localStorage.setItem('username', data.username); // Save the token
       onLoginSuccess(data.token);
 
       toast({
