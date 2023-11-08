@@ -1,26 +1,36 @@
-// src/components/NavBar.js
 import React from 'react';
-import { Box, Flex, Heading, Spacer, Link as ChakraLink } from '@chakra-ui/react'; // Import Chakra UI components
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Flex, Button, useToast } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
-const NavBar = () => {
+const Navbar = () => {
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear user token and profile data from localStorage
+    localStorage.removeItem('token');
+    
+    // Optionally, add more logic for a logout process like clearing the state, etc.
+    
+    // Show a toast notification
+    toast({
+      title: 'Logout successful.',
+      description: "You've been logged out.",
+      status: 'info',
+      duration: 5000,
+      isClosable: true,
+    });
+    
+    // Redirect to login page
+    navigate('/login');
+  };
+
   return (
-    <Flex bg="blue.500" p={4} alignItems="center">
-      <Box flex={1}>
-        <Heading size="md" color="white">
-          EchoHub
-        </Heading>
-      </Box>
-      <Box>
-        <ChakraLink as={Link} to="/login" color="white" mr={4}>
-          Login
-        </ChakraLink>
-        <ChakraLink as={Link} to="/register" color="white">
-          Register
-        </ChakraLink>
-      </Box>
+    <Flex bg="blue.500" color="white" p={4} justifyContent="space-between" alignItems="center">
+      {/* Other content */}
+      <Button onClick={handleLogout}>Logout</Button>
     </Flex>
   );
 };
 
-export default NavBar;
+export default Navbar;
