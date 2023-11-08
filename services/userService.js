@@ -1,5 +1,5 @@
 // userService.js
-const pool = require('./db');
+const pool = require('../db/index');
 
 const setUserOnlineStatus = async (userId, isOnline) => {
   try {

@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const pool = require('./db/index'); // Adjust the path as necessary
 const { saveMessage } = require('./services/messageService');
 const { setUserOnlineStatus } = require('./services/userService');
+const cors = require('cors');
 
 
 
@@ -16,6 +17,7 @@ const io = socketIo(server); // Setup Socket.IO
 
 // Middleware to parse the body
 app.use(express.json());
+app.use(cors()); // This will allow all CORS requests. For production, you should configure this with more restrictions.
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
