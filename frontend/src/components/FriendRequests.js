@@ -88,7 +88,7 @@ const FriendRequests = () => {
   const rejectFriendRequest = async (requestId) => {
     try {
       const response = await fetch('http://localhost:5000/friends/reject', {
-        method: 'POST',
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + localStorage.getItem('token') // Ensure you have the token stored in localStorage

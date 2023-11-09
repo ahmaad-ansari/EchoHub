@@ -75,8 +75,7 @@ router.post('/accept', auth, async (req, res) => {
     }
 });
 
-// POST /friends/reject - Reject a friend request
-router.post('/reject', auth, async (req, res) => {
+router.delete('/reject', auth, async (req, res) => {
     const { request_id } = req.body; // ID of the friend request
     const user_id = req.user.user_id; // Authenticated user ID from the token
 
@@ -91,18 +90,59 @@ router.post('/reject', auth, async (req, res) => {
             return res.status(404).json({ message: 'Friend request not found or not pending' });
         }
 
-        // Update the friend request status to 'rejected'
-        const updateRequest = await pool.query(
-            'UPDATE friend_requests SET status = $1 WHERE request_id = $2 RETURNING *',
-            ['rejected', request_id]
+        // Delete the friend request
+        await pool.query(
+            'DELETE FROM friend_requests WHERE request_id = $1',
+            [request_id]
         );
 
-        res.json(updateRequest.rows[0]);
+        // Send a response to confirm the deletion
+        res.json({ message: 'Friend request rejected and deleted successfully.' });
     } catch (error) {
         console.error(error.message);
         res.status(500).send('Server Error');
     }
 });
+
+router.delete('/remove', auth, async (req, res) => {
+    const { friend_id } = req.body; // ID of the friend request
+    const user_id = req.user.user_id; // Authenticated user ID from the token
+
+    try {
+        // Begin a transaction
+        await pool.query('BEGIN');
+
+        // Check if the friendship exists
+        const friendship = await pool.query(
+            `SELECT * FROM friend_requests 
+             WHERE ((from_user_id = $1 AND to_user_id = $2) OR (from_user_id = $2 AND to_user_id = $1))
+             AND status = 'accepted' FOR UPDATE`,
+            [user_id, friend_id]
+        );
+
+        if (friendship.rows.length === 0) {
+            await pool.query('ROLLBACK');
+            return res.status(404).json({ message: 'Friendship not found' });
+        }
+
+        // Delete the friendship
+        await pool.query(
+            `DELETE FROM friend_requests 
+             WHERE (from_user_id = $1 AND to_user_id = $2) OR (from_user_id = $2 AND to_user_id = $1)`,
+            [user_id, friend_id]
+        );
+
+        // Commit the transaction
+        await pool.query('COMMIT');
+
+        res.json({ message: 'Friendship removed successfully.' });
+    } catch (error) {
+        await pool.query('ROLLBACK');
+        console.error(error.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 
 // GET /friends - List all friends
 router.get('/', auth, async (req, res) => {

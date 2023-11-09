@@ -119,48 +119,44 @@ const ChatPanel = ({ currentChatUser, currentUser }) => {
 
   return (
     <Flex
-    direction="column"
-    borderWidth="1px"
-    borderRadius="lg"
-    p={4}
-    bg="white"
-    height="80vh"
-    maxWidth="100%"
-    boxShadow="sm"
-  >
-    {/* Chat header */}
-    <Flex
-      bg="gray.100"
-      p={3}
-      width="100%"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Text fontSize="lg" fontWeight="bold">
-        {currentChatUser.username}
-      </Text>
-    </Flex>
-
-    <Flex
       direction="column"
-      p={3}
-      spacing={4}
-      alignItems="flex-start"
-      width="100%"
-      overflowY="auto"
-      flex={1}
+      borderWidth="1px"
+      borderRadius="lg"
+      p={4}
+      bg="white"
+      height="80vh"
+      maxWidth="100%"
+      boxShadow="sm"
     >
-        {messages.map((msg, index) => {
-          // Check if message is from current user
-          const isFromCurrentUser = String(msg.from_user_id) === String(currentUser.id);
+      {/* Chat header */}
+      <Flex
+        bg="gray.100"
+        p={3}
+        width="100%"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Text fontSize="lg" fontWeight="bold">
+          {currentChatUser.username}
+        </Text>
+      </Flex>
 
+      {/* Message display area */}
+      <Flex
+        direction="column"
+        p={3}
+        width="100%"
+        overflowY="auto"
+        flex={1}
+      >
+        {messages.map((msg, index) => {
+          const isFromCurrentUser = String(msg.from_user_id) === String(currentUser.id);
           return (
-            <Stack
+            <Flex
               key={index}
-              direction="row"
-              spacing={3}
-              alignItems="center"
-              style={{ alignSelf: isFromCurrentUser ? 'flex-end' : 'flex-start' }}
+              direction="column"
+              alignItems={isFromCurrentUser ? 'flex-end' : 'flex-start'}
+              mb={4} // Margin bottom for space between messages
             >
               <Box
                 p={3}
@@ -169,13 +165,19 @@ const ChatPanel = ({ currentChatUser, currentUser }) => {
               >
                 <Text fontSize="sm">{msg.message_text}</Text>
               </Box>
-              <Text fontSize="xs" color="gray.500">
+              <Text
+                fontSize="xs"
+                color="gray.500"
+                mt={2} // Margin top for space between message and timestamp
+              >
                 {new Date(msg.timestamp).toLocaleString()}
               </Text>
-            </Stack>
+            </Flex>
           );
         })}
       </Flex>
+
+      {/* Input and send button */}
       <Divider />
       <HStack spacing={3} pt={3}>
         <Input
