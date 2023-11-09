@@ -4,10 +4,16 @@ import UserList from '../components/UserList';
 import FriendRequests from '../components/FriendRequests';
 import FriendsList from '../components/FriendsList';
 import ChatPanel from '../components/ChatPanel';
-import { Grid, GridItem, Box, HStack, Button } from '@chakra-ui/react';
+import { Grid, GridItem, Box, HStack, Button, Flex } from '@chakra-ui/react';
 
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState('userList'); // Initial active component
+
+  const [currentChatUserId, setCurrentChatUserId] = useState(null);
+
+  const handleChatIconClick = (userId) => {
+    setCurrentChatUserId(userId);
+  };
 
   // Function to change the active tab
   const changeTab = (tabName) => {
@@ -22,11 +28,12 @@ const HomePage = () => {
       case 'friendRequests':
         return <FriendRequests />;
       case 'friendsList':
-        return <FriendsList />;
+        return <FriendsList onChatIconClick={handleChatIconClick} />;
       default:
         return <UserList />;
     }
   };
+
 
   return (
     <>
@@ -52,7 +59,7 @@ const HomePage = () => {
         </GridItem>
         <GridItem colSpan={4} bg="gray.100" p={4}>
           {/* Chat Panel */}
-          <ChatPanel />
+          {currentChatUserId && <ChatPanel currentChatUserId={currentChatUserId} />}
         </GridItem>
       </Grid>
     </>

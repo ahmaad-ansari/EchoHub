@@ -4,7 +4,7 @@ const pool = require('../db/index');
 const setUserOnlineStatus = async (userId, isOnline) => {
   try {
     await pool.query(
-      'UPDATE users SET online = $1 WHERE id = $2',
+      'UPDATE users SET online = $1 WHERE user_id = $2',
       [isOnline, userId]
     );
   } catch (error) {

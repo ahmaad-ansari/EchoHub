@@ -1,4 +1,5 @@
 require('dotenv').config(); // Ensure this is at the top to load environment variables
+const cors = require('cors');
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
@@ -6,19 +7,42 @@ const jwt = require('jsonwebtoken');
 const pool = require('./db/index'); // Adjust the path as necessary
 const { saveMessage } = require('./services/messageService');
 const { setUserOnlineStatus } = require('./services/userService');
-const cors = require('cors');
+
 
 
 
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server); // Setup Socket.IO
+const io = socketIo(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 
+
+
+// Set up a whitelist and check against it:
+var whitelist = ['http://localhost:3000']; // Add any other origins you want to whitelist
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, // This is important for cookies/token and client-side
+};
+
+// Then pass them to cors:
+app.use(cors(corsOptions));
 // Middleware to parse the body
 app.use(express.json());
-app.use(cors()); // This will allow all CORS requests. For production, you should configure this with more restrictions.
 app.use(express.urlencoded({ extended: true }));
+
 
 // Routes
 const messageRoutes = require('./routes/messages'); // Adjust the path as necessary
@@ -49,47 +73,72 @@ io.use(socketAuthMiddleware);
 
 const onlineUsers = new Map();
 
-// Setup Socket.IO
 io.on('connection', (socket) => {
-  console.log('New client connected');
+  console.log('New client connected, user_id:', socket.user_id);
   onlineUsers.set(socket.user_id, socket);
 
   setUserOnlineStatus(socket.user_id, true).catch((error) => {
-    console.error(error);
+    console.error('Error setting user online status:', error);
   });
 
-  socket.on('joinRoom', ({ userId }) => {
-    socket.join(userId);
-    console.log(`User with ID: ${userId} joined room: ${userId}`);
-  });
-
-  socket.on('sendMessage', async ({ toUserId, text }) => {
-    const fromUserId = socket.user_id;
-    const recipientSocket = onlineUsers.get(toUserId);
-
-    try {
-      const savedMessage = await saveMessage(fromUserId, toUserId, text);
-      
-      // Emit the message to the recipient if they're connected
-      if (recipientSocket) {
-        recipientSocket.emit('receiveMessage', savedMessage);
-      }
-    } catch (error) {
-      // Emit back an error to the sender if the message couldn't be saved
-      socket.emit('messageSaveError', { message: 'Failed to save message.' });
+  socket.on('joinRoom', ({ roomId }) => {
+    // Leave all other rooms first (optional, if you want one room per chat session)
+    console.log(`Received joinRoom event with roomId: ${roomId}`); // Log the roomId received from the client
+    if (!roomId) {
+      console.error('joinRoom event called with undefined roomId');
+      return;
     }
+    for (const room of socket.rooms) {
+      if (room !== socket.id) {
+        socket.leave(room);
+      }
+    }
+    
+    // Join the new room
+    socket.join(roomId);
+    console.log(`User with ID: ${socket.user_id} joined room: ${roomId}`);
   });
+  
+  socket.on('leaveRoom', ({ roomId }) => {
+    socket.leave(roomId);
+    console.log(`User with ID: ${socket.user_id} left room: ${roomId}`);
+  });
+  
+
+  socket.on('sendMessage', async ({ roomId, text }) => {
+  if (!roomId || !text) {
+    console.error('sendMessage event called with missing roomId or text');
+    return;
+  }
+  
+  const [user1, user2] = roomId.split('_').map(Number);
+  const fromUserId = socket.user_id;
+  const toUserId = fromUserId === user1 ? user2 : user1;
+  
+  console.log(`Attempting to send message from ${fromUserId} to ${toUserId}: ${text}`);
+
+  try {
+    const savedMessage = await saveMessage(fromUserId, toUserId, text);
+    io.to(roomId).emit('receiveMessage', savedMessage);
+    console.log(`Message sent to room ${roomId}: `, savedMessage);
+  } catch (error) {
+    console.error('Error in sendMessage event:', error);
+    socket.emit('messageSaveError', { message: 'Failed to save message.' });
+  }
+});
+
 
   socket.on('disconnect', () => {
     console.log(`User with ID: ${socket.user_id} disconnected`);
     onlineUsers.delete(socket.user_id);
     setUserOnlineStatus(socket.user_id, false).catch((error) => {
-      console.error(error);
+      console.error('Error setting user offline status:', error);
     });
     
     socket.broadcast.emit('userOffline', socket.user_id);
   });
 });
+
 
 // Test API Endpoint
 app.get('/', (req, res) => {

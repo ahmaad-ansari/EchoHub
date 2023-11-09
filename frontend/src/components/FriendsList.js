@@ -3,7 +3,7 @@ import { Box, List, ListItem, Text, IconButton, useToast } from '@chakra-ui/reac
 import { ChatIcon } from '@chakra-ui/icons';
 
 
-const FriendsList = () => {
+const FriendsList = ({ onChatIconClick }) => {
   const [friends, setFriends] = useState([]);
   const toast = useToast();
 
@@ -58,7 +58,7 @@ const FriendsList = () => {
               <IconButton
                 aria-label="Chat with friend"
                 icon={<ChatIcon />}
-                onClick={() => chat(friend.user_id)}
+                onClick={() => onChatIconClick(friend.user_id)}
                 size="sm"
                 colorScheme="gray"
               />
