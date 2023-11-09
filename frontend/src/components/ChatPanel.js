@@ -32,7 +32,6 @@ const ChatPanel = ({ currentChatUser, currentUser }) => {
     let isMounted = true;
     if (currentUser && currentChatUser) {
       const roomId = getRoomId(currentUser.id, currentChatUser.id); // Ensure proper IDs are used
-      console.log(`Computed roomId: ${roomId}`);
 
       if (!socketRef.current) {
         socketRef.current = io(SOCKET_SERVER_URL, {
@@ -50,7 +49,6 @@ const ChatPanel = ({ currentChatUser, currentUser }) => {
         });
 
         socketRef.current.on('receiveMessage', (newMessage) => {
-          console.log('New message received', newMessage);
           if (isMounted) {
             setMessages((prevMessages) => [...prevMessages, newMessage]);
           }
@@ -87,7 +85,6 @@ const ChatPanel = ({ currentChatUser, currentUser }) => {
   }, [currentChatUser, currentUser]);
 
   const sendMessage = () => {
-    console.log(currentChatUser.id, " ",currentUser.id);
     // Check if currentUser is defined and has an id property
     if (!currentUser || !currentUser.id) {
       toast({
@@ -118,13 +115,6 @@ const ChatPanel = ({ currentChatUser, currentUser }) => {
     });
   
     setMessage(''); // Clear the input after sending
-  };
-  
-
-  const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      sendMessage();
-    }
   };
 
   return (
@@ -164,8 +154,6 @@ const ChatPanel = ({ currentChatUser, currentUser }) => {
           // Check if message is from current user
           const isFromCurrentUser = String(msg.from_user_id) === String(currentUser.id);
 
-          console.log(`Message #${index} from current user: ${isFromCurrentUser}`); // This will log true for sent, false for received
-
           return (
             <Stack
               key={index}
@@ -173,7 +161,6 @@ const ChatPanel = ({ currentChatUser, currentUser }) => {
               spacing={3}
               alignItems="center"
               style={{ alignSelf: isFromCurrentUser ? 'flex-end' : 'flex-start' }}
-
             >
               <Box
                 p={3}
@@ -191,12 +178,6 @@ const ChatPanel = ({ currentChatUser, currentUser }) => {
       </Flex>
       <Divider />
       <HStack spacing={3} pt={3}>
-        <IconButton
-          icon={<AttachmentIcon />}
-          variant="outline"
-          aria-label="Attach file"
-          mr={2}
-        />
         <Input
           placeholder="Type your message here..."
           value={message}
