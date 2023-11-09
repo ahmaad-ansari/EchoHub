@@ -14,22 +14,24 @@ const saveMessage = async (fromUserId, toUserId, text) => {
   }
 };
 
-const getMessages = async (userId1, userId2) => {
+// Add a new function to get past messages
+const getPastMessages = async (fromUserId, toUserId) => {
     try {
-      const messagesQuery = `SELECT * FROM messages
-                             WHERE (from_user_id = $1 AND to_user_id = $2)
-                             OR (from_user_id = $2 AND to_user_id = $1)
+      const messagesQuery = `SELECT * FROM messages 
+                             WHERE (from_user_id = $1 AND to_user_id = $2) 
+                             OR (from_user_id = $2 AND to_user_id = $1) 
                              ORDER BY timestamp ASC`;
-      const values = [userId1, userId2];
-      const result = await pool.query(messagesQuery, values);
-      return result.rows;
+      const values = [fromUserId, toUserId];
+      const messages = await pool.query(messagesQuery, values);
+      return messages.rows;
     } catch (error) {
-      console.error('Error retrieving messages:', error);
-      throw error;
+      console.error('Error fetching past messages:', error);
+      throw error; // Rethrow the error to handle it in the calling function
     }
   };
+
   
-  module.exports = {
-    saveMessage,
-    getMessages,
-  };
+module.exports = {
+saveMessage,
+getPastMessages,
+};

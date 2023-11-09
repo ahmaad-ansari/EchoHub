@@ -8,7 +8,10 @@ import { Grid, GridItem, Box, HStack, Button } from '@chakra-ui/react';
 
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState('userList'); // Initial active component
-  const [currentChatUserId, setCurrentChatUserId] = useState(null);
+  const [currentChatUser, setCurrentChatUser] = useState({
+    id: null,
+    username: null,
+  });
 
   // Here, we are setting a static currentUser object.
   // In a real app, you would probably fetch this from an API or authentication context.
@@ -18,8 +21,11 @@ const HomePage = () => {
     // ... other user properties
   });
 
-  const handleChatIconClick = (userId) => {
-    setCurrentChatUserId(userId);
+  const handleChatIconClick = (userId, username) => {
+    setCurrentChatUser({
+      id: userId,
+      username: username
+    });
   };
 
   // Function to change the active tab
@@ -65,10 +71,15 @@ const HomePage = () => {
         </GridItem>
         <GridItem colSpan={4} bg="gray.100" p={4}>
           {/* Chat Panel */}
-          {/* Ensure both currentUser and currentChatUserId are defined before rendering ChatPanel */}
-          {currentUser && currentChatUserId && (
-            <ChatPanel currentUser={currentUser} currentChatUserId={currentChatUserId} />
-          )}
+          {/* Ensure both currentUser and currentChatUser are defined before rendering ChatPanel */}
+          {
+            currentUser && currentChatUser && (
+              <ChatPanel
+                currentUser={currentUser}
+                currentChatUser={currentChatUser}
+              />
+            )
+          }
         </GridItem>
       </Grid>
     </>

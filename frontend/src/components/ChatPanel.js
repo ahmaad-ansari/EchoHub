@@ -16,7 +16,7 @@ import { ArrowForwardIcon, AttachmentIcon } from '@chakra-ui/icons';
 
 const SOCKET_SERVER_URL = 'http://localhost:5000'; // Update with your server URL
 
-const ChatPanel = ({ currentChatUserId, currentUser }) => {
+const ChatPanel = ({ currentChatUser, currentUser }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState(''); // Corrected to be a string
   const toast = useToast();
@@ -30,9 +30,8 @@ const ChatPanel = ({ currentChatUserId, currentUser }) => {
 
   useEffect(() => {
     let isMounted = true;
-
-    if (currentUser && currentChatUserId) {
-      const roomId = getRoomId(currentUser.id, currentChatUserId); // Ensure proper IDs are used
+    if (currentUser && currentChatUser) {
+      const roomId = getRoomId(currentUser.id, currentChatUser.id); // Ensure proper IDs are used
       console.log(`Computed roomId: ${roomId}`);
 
       if (!socketRef.current) {
@@ -73,11 +72,11 @@ const ChatPanel = ({ currentChatUserId, currentUser }) => {
       }
     }
 
-    // Clean up on component unmount or when currentChatUserId changes
+    // Clean up on component unmount or when currentChatUser.id changes
     return () => {
       isMounted = false;
       if (socketRef.current) {
-        const roomId = getRoomId(currentUser.id, currentChatUserId); // Ensure proper IDs are used
+        const roomId = getRoomId(currentUser.id, currentChatUser.id); // Ensure proper IDs are used
         // Leave the chat room using the roomId
         socketRef.current.emit('leaveRoom', { roomId });
         // Disconnect the socket
@@ -85,10 +84,10 @@ const ChatPanel = ({ currentChatUserId, currentUser }) => {
         socketRef.current = null;
       }
     };
-  }, [currentChatUserId, currentUser]);
+  }, [currentChatUser, currentUser]);
 
   const sendMessage = () => {
-    console.log(currentChatUserId, " ",currentUser.id);
+    console.log(currentChatUser.id, " ",currentUser.id);
     // Check if currentUser is defined and has an id property
     if (!currentUser || !currentUser.id) {
       toast({
@@ -111,7 +110,7 @@ const ChatPanel = ({ currentChatUserId, currentUser }) => {
       return;
     }
   
-    const roomId = getRoomId(currentUser.id, currentChatUserId); // Ensure proper IDs are used
+    const roomId = getRoomId(currentUser.id, currentChatUser.id); // Ensure proper IDs are used
     // Emit message to server with roomId
     socketRef.current.emit('sendMessage', {
       roomId: roomId, // This is expected on the server now
@@ -130,24 +129,37 @@ const ChatPanel = ({ currentChatUserId, currentUser }) => {
 
   return (
     <Flex
-      direction="column"
-      borderWidth="1px"
-      borderRadius="lg"
-      p={4}
-      bg="white"
-      height="80vh"
-      maxWidth="100%"
-      boxShadow="sm"
+    direction="column"
+    borderWidth="1px"
+    borderRadius="lg"
+    p={4}
+    bg="white"
+    height="80vh"
+    maxWidth="100%"
+    boxShadow="sm"
+  >
+    {/* Chat header */}
+    <Flex
+      bg="gray.100"
+      p={3}
+      width="100%"
+      justifyContent="center"
+      alignItems="center"
     >
-      <Flex
-        direction="column"
-        p={3}
-        spacing={4}
-        alignItems="flex-start"
-        width="100%"
-        overflowY="auto"
-        flex={1}
-      >
+      <Text fontSize="lg" fontWeight="bold">
+        {currentChatUser.username}
+      </Text>
+    </Flex>
+
+    <Flex
+      direction="column"
+      p={3}
+      spacing={4}
+      alignItems="flex-start"
+      width="100%"
+      overflowY="auto"
+      flex={1}
+    >
         {messages.map((msg, index) => {
           // Check if message is from current user
           const isFromCurrentUser = String(msg.from_user_id) === String(currentUser.id);

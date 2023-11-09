@@ -58,7 +58,7 @@ const FriendsList = ({ onChatIconClick }) => {
               <IconButton
                 aria-label="Chat with friend"
                 icon={<ChatIcon />}
-                onClick={() => onChatIconClick(friend.user_id)}
+                onClick={() => onChatIconClick(friend.user_id, friend.username)}
                 size="sm"
                 colorScheme="gray"
               />
