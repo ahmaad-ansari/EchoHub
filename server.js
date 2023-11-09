@@ -8,10 +8,6 @@ const pool = require('./db/index'); // Adjust the path as necessary
 const { saveMessage } = require('./services/messageService');
 const { setUserOnlineStatus } = require('./services/userService');
 
-
-
-
-
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -21,7 +17,6 @@ const io = socketIo(server, {
     credentials: true
   }
 });
-
 
 
 // Set up a whitelist and check against it:
@@ -103,30 +98,52 @@ io.on('connection', (socket) => {
     socket.leave(roomId);
     console.log(`User with ID: ${socket.user_id} left room: ${roomId}`);
   });
-  
 
   socket.on('sendMessage', async ({ roomId, text }) => {
-  if (!roomId || !text) {
-    console.error('sendMessage event called with missing roomId or text');
-    return;
-  }
-  
-  const [user1, user2] = roomId.split('_').map(Number);
-  const fromUserId = socket.user_id;
-  const toUserId = fromUserId === user1 ? user2 : user1;
-  
-  console.log(`Attempting to send message from ${fromUserId} to ${toUserId}: ${text}`);
+    if (!roomId || !text) {
+      console.error('sendMessage event called with missing roomId or text');
+      return;
+    }
 
-  try {
-    const savedMessage = await saveMessage(fromUserId, toUserId, text);
-    io.to(roomId).emit('receiveMessage', savedMessage);
-    console.log(`Message sent to room ${roomId}: `, savedMessage);
-  } catch (error) {
-    console.error('Error in sendMessage event:', error);
-    socket.emit('messageSaveError', { message: 'Failed to save message.' });
-  }
-});
+    const [user1, user2] = roomId.split('_').map(Number);
+    const fromUserId = socket.user_id;
+    const toUserId = fromUserId === user1 ? user2 : user1;
 
+    console.log(`Attempting to send message from ${fromUserId} to ${toUserId}: ${text}`);
+
+    try {
+      const savedMessage = await saveMessage(fromUserId, toUserId, text);
+      io.to(roomId).emit('receiveMessage', savedMessage);
+      console.log(`Message sent to room ${roomId}: `, savedMessage);
+    } catch (error) {
+      console.error('Error in sendMessage event:', error);
+      socket.emit('messageSaveError', { message: 'Failed to save message.' });
+    }
+  });
+
+  // New event for fetching past messages
+  socket.on('getPastMessages', async ({ roomId }) => {
+    if (!roomId) {
+      console.error('getPastMessages event called with missing roomId');
+      return;
+    }
+
+    const [user1, user2] = roomId.split('_').map(Number);
+    const fromUserId = socket.user_id;
+    const toUserId = fromUserId === user1 ? user2 : user1;
+
+    try {
+      const messages = await pool.query(
+        'SELECT * FROM messages WHERE (from_user_id = $1 AND to_user_id = $2) OR (from_user_id = $2 AND to_user_id = $1) ORDER BY timestamp ASC',
+        [fromUserId, toUserId]
+      );
+      socket.emit('pastMessages', messages.rows);
+    } catch (error) {
+      console.error('Error fetching past messages:', error);
+      socket.emit('messageFetchError', { message: 'Failed to fetch past messages.' });
+    }
+
+  });
 
   socket.on('disconnect', () => {
     console.log(`User with ID: ${socket.user_id} disconnected`);
@@ -138,7 +155,6 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('userOffline', socket.user_id);
   });
 });
-
 
 // Test API Endpoint
 app.get('/', (req, res) => {
