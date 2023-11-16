@@ -1,9 +1,125 @@
-[2023-11-16T21:04:25.983Z] [INFO] User with ID: 10 left room: 7_10
-[2023-11-16T21:04:25.985Z] [INFO] User with ID: 10 disconnected
-[2023-11-16T21:04:28.664Z] [INFO] User with ID: 8 left room: 7_8
-[2023-11-16T21:04:28.664Z] [INFO] User with ID: 8 disconnected
-[2023-11-16T21:04:35.135Z] [INFO] User with ID: 7 disconnected
-[2023-11-16T21:04:35.247Z] [INFO] New client connected, user_id: 7
-[2023-11-16T21:04:35.253Z] [INFO] User with ID: 7 joined room: _7
-[2023-11-16T21:04:40.481Z] [INFO] User with ID: 7 left room: _7
-[2023-11-16T21:04:40.484Z] [INFO] User with ID: 7 disconnected
+[2023-11-16T22:49:52.605Z] [INFO] Server listening on port 5000
+[2023-11-16T22:49:53.292Z] [INFO] New client connected, user_id: 7
+[2023-11-16T22:49:53.306Z] [INFO] User with ID: 7 joined room: _7
+[2023-11-16T22:49:53.325Z] [INFO] New client connected, user_id: 10
+[2023-11-16T22:49:53.336Z] [INFO] User with ID: 10 joined room: _10
+[2023-11-16T22:49:54.171Z] [INFO] New client connected, user_id: 11
+[2023-11-16T22:49:54.182Z] [INFO] User with ID: 11 joined room: _11
+[2023-11-16T22:50:28.042Z] [INFO] User with ID: 11 left room: _11
+[2023-11-16T22:50:28.043Z] [INFO] User with ID: 11 disconnected
+[2023-11-16T22:50:31.478Z] [INFO] User with ID: 10 left room: _10
+[2023-11-16T22:50:31.479Z] [INFO] User with ID: 10 disconnected
+[2023-11-16T22:50:32.238Z] [INFO] User with ID: 7 left room: _7
+[2023-11-16T22:50:32.242Z] [INFO] User with ID: 7 disconnected
+[2023-11-16T22:50:39.832Z] [INFO] Server listening on port 5000
+[2023-11-16T22:56:25.600Z] [INFO] New client connected, user_id: 7
+[2023-11-16T22:56:25.614Z] [INFO] User with ID: 7 joined room: _7
+[2023-11-16T22:56:25.872Z] [INFO] User with ID: 7 disconnected
+[2023-11-16T22:56:26.026Z] [INFO] New client connected, user_id: 7
+[2023-11-16T22:56:26.035Z] [INFO] User with ID: 7 joined room: _7
+[2023-11-16T22:56:30.691Z] [INFO] New client connected, user_id: 10
+[2023-11-16T22:56:30.705Z] [INFO] User with ID: 10 joined room: _10
+[2023-11-16T22:56:30.968Z] [INFO] User with ID: 10 disconnected
+[2023-11-16T22:56:31.092Z] [INFO] New client connected, user_id: 10
+[2023-11-16T22:56:31.107Z] [INFO] User with ID: 10 joined room: _10
+[2023-11-16T22:56:54.197Z] [INFO] New client connected, user_id: 12
+[2023-11-16T22:56:54.209Z] [INFO] User with ID: 12 joined room: _12
+[2023-11-16T22:56:58.655Z] [INFO] User with ID: 7 disconnected
+[2023-11-16T22:56:58.812Z] [INFO] New client connected, user_id: 7
+[2023-11-16T22:56:58.822Z] [INFO] User with ID: 7 joined room: _7
+[2023-11-16T22:56:59.674Z] [INFO] User with ID: 10 disconnected
+[2023-11-16T22:56:59.802Z] [INFO] New client connected, user_id: 10
+[2023-11-16T22:56:59.812Z] [INFO] User with ID: 10 joined room: _10
+[2023-11-16T22:58:01.419Z] [INFO] User with ID: 7 left room: _7
+[2023-11-16T22:58:01.420Z] [INFO] User with ID: 7 disconnected
+[2023-11-16T22:58:01.430Z] [INFO] New client connected, user_id: 7
+[2023-11-16T22:58:01.436Z] [INFO] User with ID: 7 joined room: 7_12
+[2023-11-16T22:58:12.423Z] [INFO] Attempting to send message from 7 to 12: Hello Ammar this is Ahmaad
+[2023-11-16T22:58:12.473Z] [INFO] Message sent to room 7_12: {"message_id":33,"from_user_id":7,"to_user_id":12,"message_text":"Hello Ammar this is Ahmaad","timestamp":"2023-11-16T22:58:12.458Z"}
+[2023-11-16T22:58:15.791Z] [INFO] User with ID: 12 left room: _12
+[2023-11-16T22:58:15.793Z] [INFO] User with ID: 12 disconnected
+[2023-11-16T22:58:15.798Z] [INFO] New client connected, user_id: 12
+[2023-11-16T22:58:15.803Z] [INFO] User with ID: 12 joined room: 7_12
+[2023-11-16T22:58:26.437Z] [INFO] Attempting to send message from 12 to 7: Hello Ahmaad this is Ammar
+[2023-11-16T22:58:26.484Z] [INFO] Message sent to room 7_12: {"message_id":34,"from_user_id":12,"to_user_id":7,"message_text":"Hello Ahmaad this is Ammar","timestamp":"2023-11-16T22:58:26.470Z"}
+[2023-11-16T22:58:29.699Z] [INFO] User with ID: 7 left room: 7_12
+[2023-11-16T22:58:29.700Z] [INFO] User with ID: 7 disconnected
+[2023-11-16T22:58:29.708Z] [INFO] New client connected, user_id: 7
+[2023-11-16T22:58:29.713Z] [INFO] User with ID: 7 joined room: 7_10
+[2023-11-16T22:58:37.741Z] [INFO] Attempting to send message from 7 to 10: Hello Zubair this is Ahmaad
+[2023-11-16T22:58:37.754Z] [INFO] Message sent to room 7_10: {"message_id":35,"from_user_id":7,"to_user_id":10,"message_text":"Hello Zubair this is Ahmaad","timestamp":"2023-11-16T22:58:37.742Z"}
+[2023-11-16T22:58:40.482Z] [INFO] User with ID: 10 left room: _10
+[2023-11-16T22:58:40.483Z] [INFO] User with ID: 10 disconnected
+[2023-11-16T22:58:40.490Z] [INFO] New client connected, user_id: 10
+[2023-11-16T22:58:40.494Z] [INFO] User with ID: 10 joined room: 7_10
+[2023-11-16T22:58:48.665Z] [INFO] Attempting to send message from 10 to 7: Hello Ahmaad this is Zubair
+[2023-11-16T22:58:48.678Z] [INFO] Message sent to room 7_10: {"message_id":36,"from_user_id":10,"to_user_id":7,"message_text":"Hello Ahmaad this is Zubair","timestamp":"2023-11-16T22:58:48.666Z"}
+[2023-11-16T22:58:49.669Z] [INFO] User with ID: 7 left room: 7_10
+[2023-11-16T22:58:49.670Z] [INFO] User with ID: 7 disconnected
+[2023-11-16T22:58:49.676Z] [INFO] New client connected, user_id: 7
+[2023-11-16T22:58:49.681Z] [INFO] User with ID: 7 joined room: 7_12
+[2023-11-16T22:58:50.236Z] [INFO] User with ID: 7 left room: 7_12
+[2023-11-16T22:58:50.237Z] [INFO] User with ID: 7 disconnected
+[2023-11-16T22:58:50.243Z] [INFO] New client connected, user_id: 7
+[2023-11-16T22:58:50.248Z] [INFO] User with ID: 7 joined room: 7_10
+[2023-11-16T22:58:51.021Z] [INFO] User with ID: 7 left room: 7_10
+[2023-11-16T22:58:51.022Z] [INFO] User with ID: 7 disconnected
+[2023-11-16T22:58:51.029Z] [INFO] New client connected, user_id: 7
+[2023-11-16T22:58:51.034Z] [INFO] User with ID: 7 joined room: 7_12
+[2023-11-16T22:58:52.143Z] [INFO] User with ID: 10 left room: 7_10
+[2023-11-16T22:58:52.144Z] [INFO] User with ID: 10 disconnected
+[2023-11-16T22:58:52.152Z] [INFO] New client connected, user_id: 10
+[2023-11-16T22:58:52.159Z] [INFO] User with ID: 10 joined room: 10_12
+[2023-11-16T22:58:52.810Z] [INFO] User with ID: 10 left room: 10_12
+[2023-11-16T22:58:52.811Z] [INFO] User with ID: 10 disconnected
+[2023-11-16T22:58:52.817Z] [INFO] New client connected, user_id: 10
+[2023-11-16T22:58:52.822Z] [INFO] User with ID: 10 joined room: 7_10
+[2023-11-16T22:58:54.506Z] [INFO] User with ID: 12 left room: 7_12
+[2023-11-16T22:58:54.507Z] [INFO] User with ID: 12 disconnected
+[2023-11-16T22:58:54.514Z] [INFO] New client connected, user_id: 12
+[2023-11-16T22:58:54.518Z] [INFO] User with ID: 12 joined room: 7_12
+[2023-11-16T22:58:55.023Z] [INFO] User with ID: 12 left room: 7_12
+[2023-11-16T22:58:55.024Z] [INFO] User with ID: 12 disconnected
+[2023-11-16T22:58:55.027Z] [INFO] New client connected, user_id: 12
+[2023-11-16T22:58:55.031Z] [INFO] User with ID: 12 joined room: 10_12
+[2023-11-16T22:59:07.396Z] [INFO] Attempting to send message from 12 to 10: Hello this is my first message with you
+[2023-11-16T22:59:07.442Z] [INFO] Message sent to room 10_12: {"message_id":37,"from_user_id":12,"to_user_id":10,"message_text":"Hello this is my first message with you","timestamp":"2023-11-16T22:59:07.429Z"}
+[2023-11-16T22:59:09.125Z] [INFO] User with ID: 10 left room: 7_10
+[2023-11-16T22:59:09.126Z] [INFO] User with ID: 10 disconnected
+[2023-11-16T22:59:09.134Z] [INFO] New client connected, user_id: 10
+[2023-11-16T22:59:09.143Z] [INFO] User with ID: 10 joined room: 10_12
+[2023-11-16T22:59:11.837Z] [INFO] User with ID: 7 left room: 7_12
+[2023-11-16T22:59:11.841Z] [INFO] User with ID: 7 disconnected
+[2023-11-16T22:59:16.577Z] [INFO] New client connected, user_id: 7
+[2023-11-16T22:59:16.583Z] [INFO] User with ID: 7 joined room: _7
+[2023-11-16T22:59:16.863Z] [INFO] User with ID: 7 disconnected
+[2023-11-16T22:59:17.029Z] [INFO] New client connected, user_id: 7
+[2023-11-16T22:59:17.040Z] [INFO] User with ID: 7 joined room: _7
+[2023-11-16T22:59:19.538Z] [INFO] User with ID: 7 left room: _7
+[2023-11-16T22:59:19.539Z] [INFO] User with ID: 7 disconnected
+[2023-11-16T22:59:19.544Z] [INFO] New client connected, user_id: 7
+[2023-11-16T22:59:19.549Z] [INFO] User with ID: 7 joined room: 7_10
+[2023-11-16T22:59:20.276Z] [INFO] User with ID: 7 left room: 7_10
+[2023-11-16T22:59:20.277Z] [INFO] User with ID: 7 disconnected
+[2023-11-16T22:59:20.283Z] [INFO] New client connected, user_id: 7
+[2023-11-16T22:59:20.289Z] [INFO] User with ID: 7 joined room: 7_12
+[2023-11-16T22:59:30.812Z] [INFO] User with ID: 10 left room: 10_12
+[2023-11-16T22:59:30.814Z] [INFO] User with ID: 10 disconnected
+[2023-11-16T22:59:57.641Z] [INFO] New client connected, user_id: 10
+[2023-11-16T22:59:57.647Z] [INFO] User with ID: 10 joined room: _10
+[2023-11-16T22:59:57.928Z] [INFO] User with ID: 10 disconnected
+[2023-11-16T22:59:58.059Z] [INFO] New client connected, user_id: 10
+[2023-11-16T22:59:58.067Z] [INFO] User with ID: 10 joined room: _10
+[2023-11-16T23:00:05.242Z] [INFO] User with ID: 12 left room: 10_12
+[2023-11-16T23:00:05.247Z] [INFO] User with ID: 12 disconnected
+[2023-11-16T23:00:11.680Z] [INFO] New client connected, user_id: 12
+[2023-11-16T23:00:11.686Z] [INFO] User with ID: 12 joined room: _12
+[2023-11-16T23:00:11.985Z] [INFO] User with ID: 12 disconnected
+[2023-11-16T23:00:12.105Z] [INFO] New client connected, user_id: 12
+[2023-11-16T23:00:12.114Z] [INFO] User with ID: 12 joined room: _12
+[2023-11-16T23:00:13.020Z] [INFO] User with ID: 12 left room: _12
+[2023-11-16T23:00:13.021Z] [INFO] User with ID: 12 disconnected
+[2023-11-16T23:00:49.505Z] [INFO] User with ID: 10 left room: _10
+[2023-11-16T23:00:49.510Z] [INFO] User with ID: 10 disconnected
+[2023-11-16T23:00:50.374Z] [INFO] User with ID: 7 left room: 7_12
+[2023-11-16T23:00:50.381Z] [INFO] User with ID: 7 disconnected

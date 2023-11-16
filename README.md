@@ -5,12 +5,16 @@ EchoHub is a distributed chat application built with React, Node.js, Express.js,
 ## Features
 
 - User Registration: Users can create accounts with unique usernames and passwords.
-- Authentication: Secure user authentication using JSON Web Tokens (JWT).
-- Friend Requests: Users can send and accept friend requests, creating a list of friends.
-- Real-time Chat: Real-time chat functionality allows users to communicate with friends.
-- Online Status: Users can see which friends are currently online.
-- User Profile: Users can update their profile information.
-- Data Storage: Messages and user data are stored in a PostgreSQL database.
+- Secure Login: Users can log in to their accounts securely.
+- Issue a Friend Request: Ability to send friend requests to other users.
+- Accept/Reject Friend Request: Users have the option to accept or reject incoming friend requests.
+- Remove Friend: Option to remove existing friends from the user's friend list.
+- Update User Profile: Users can update their username, password, and profile picture.
+- Real-time Chatting: Engage in conversations with friends in real-time.
+- Chat History: Access and view past conversations, loaded from the database.
+- User Online Status: View the real-time online/offline status of friends.
+- Profile Management: Update personal profiles including usernames and profile pictures.
+- Persistent Data Storage: Reliable storage and retrieval of messages and user data using PostgreSQL.
 
 ## Installation
 
@@ -25,7 +29,7 @@ EchoHub is a distributed chat application built with React, Node.js, Express.js,
 2. Navigate to the `backend` directory:
 
    ```bash
-   cd backend
+   cd EchoHub
    ```
 
 3. Install dependencies:
@@ -34,7 +38,7 @@ EchoHub is a distributed chat application built with React, Node.js, Express.js,
    npm install
    ```
 
-4. Create a `.env` file in the `backend` directory and set the following environment variables:
+4. Update the `.env` file and set the following environment variables:
 
    ```
    PORT=<port-number>
@@ -85,23 +89,3 @@ EchoHub is a distributed chat application built with React, Node.js, Express.js,
 - Log in with your credentials.
 - Send friend requests to other users.
 - Chat with friends in real-time.
-- View the online status of your friends.
-
-## Contributing
-
-Contributions are welcome! If you'd like to contribute to EchoHub, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix: `git checkout -b feature/your-feature-name` or `git checkout -b bugfix/your-bug-fix-name`.
-3. Make your changes and commit them.
-4. Push your changes to your fork.
-5. Submit a pull request to the main repository's `main` branch.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Thanks to [Chakra UI](https://chakra-ui.com/) for providing a beautiful and customizable UI component library.
-- Special thanks to our contributors for making this project possible.

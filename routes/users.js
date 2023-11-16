@@ -48,7 +48,6 @@ router.post('/register', async (req, res) => {
   }
 });
 
-
 // POST /users/login - User login
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
@@ -138,7 +137,6 @@ router.put('/update', upload.single('profileImage'), auth, async (req, res) => {
   }
 });
 
-
 // DELETE /users/delete - Delete user and associated data
 router.delete('/delete', auth, async (req, res) => {
   const userId = req.user.user_id;
@@ -168,7 +166,6 @@ router.delete('/delete', auth, async (req, res) => {
     res.status(500).send('Server error');
   }
 });
-
 
 // GET /users/all - Get all users except the authenticated user
 router.get('/all', auth, async (req, res) => {
