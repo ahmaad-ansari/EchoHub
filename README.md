@@ -4,17 +4,17 @@ EchoHub is a distributed chat application built with React, Node.js, Express.js,
 
 ## Features
 
-- User Registration: Users can create accounts with unique usernames and passwords.
-- Secure Login: Users can log in to their accounts securely.
-- Issue a Friend Request: Ability to send friend requests to other users.
-- Accept/Reject Friend Request: Users have the option to accept or reject incoming friend requests.
-- Remove Friend: Option to remove existing friends from the user's friend list.
-- Update User Profile: Users can update their username, password, and profile picture.
-- Real-time Chatting: Engage in conversations with friends in real-time.
-- Chat History: Access and view past conversations, loaded from the database.
-- User Online Status: View the real-time online/offline status of friends.
-- Profile Management: Update personal profiles including usernames and profile pictures.
-- Persistent Data Storage: Reliable storage and retrieval of messages and user data using PostgreSQL.
+- **User Registration:** Users can create accounts with unique usernames and passwords.
+- **Secure Login:** Users can log in to their accounts securely.
+- **Issue a Friend Request:** Ability to send friend requests to other users.
+- **Accept/Reject Friend Request:** Users have the option to accept or reject incoming friend requests.
+- **Remove Friend:** Option to remove existing friends from the user's friend list.
+- **Update User Profile:** Users can update their username, password, and profile picture.
+- **Real-time Chatting:** Engage in conversations with friends in real-time.
+- **Chat History:** Access and view past conversations, loaded from the database.
+- **User Online Status:** View the real-time online/offline status of friends.
+- **Profile Management:** Update personal profiles including usernames and profile pictures.
+- **Persistent Data Storage:** Reliable storage and retrieval of messages and user data using PostgreSQL.
 
 ## Installation
 
