@@ -1,31 +1,35 @@
-require('dotenv').config();
+// Import required packages and modules
+require('dotenv').config(); // Load environment variables from a .env file
 const cors = require('cors');
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const jwt = require('jsonwebtoken');
-const pool = require('./db/index'); // Make sure this path is correct for your project
-const { saveMessage } = require('./services/messageService'); // Adjust the path as necessary
-const { setUserOnlineStatus } = require('./services/userService'); // Adjust the path as necessary
-const winston = require('winston'); // Ensure you have installed winston
+const pool = require('./db/index'); // Database connection
+const { saveMessage } = require('./services/messageService'); // Import message service
+const { setUserOnlineStatus } = require('./services/userService'); // Import user service
+const winston = require('winston'); // Logging library
 const messageService = require('./services/messageService');
+
 
 // Configure winston for logging
 const logger = winston.createLogger({
+  // Log level and format
   level: 'info',
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.printf(info => `[${info.timestamp}] [${info.level.toUpperCase()}] ${info.message}`)
   ),
   transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: 'server.log' })
+    new winston.transports.Console(), // Log to console
+    new winston.transports.File({ filename: 'server.log' }) // Log to a file
   ]
 });
 
-const app = express();
-const server = http.createServer(app);
+const app = express(); // Create Express application
+const server = http.createServer(app); // Create HTTP server using Express app
 const io = socketIo(server, {
+  // Configure socket.io
   cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
@@ -33,6 +37,7 @@ const io = socketIo(server, {
   }
 });
 
+// CORS setup
 var whitelist = ['http://localhost:3000'];
 var corsOptions = {
   origin: function (origin, callback) {
@@ -45,25 +50,28 @@ var corsOptions = {
   credentials: true
 };
 
-app.use(cors(corsOptions));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors(corsOptions)); // Use CORS middleware
+app.use(express.json()); // Parse incoming JSON
+app.use(express.urlencoded({ extended: true })); // Parse incoming URL-encoded data
 
-const messageRoutes = require('./routes/messages'); // Make sure the path is correct
-const userRoutes = require('./routes/users'); // Make sure the path is correct
-const friendRoutes = require('./routes/friends'); // Make sure the path is correct
-app.use('/users', userRoutes);
-app.use('/friends', friendRoutes);
-app.use('/messages', messageRoutes);
+// Import routes
+const messageRoutes = require('./routes/messages');
+const userRoutes = require('./routes/users');
+const friendRoutes = require('./routes/friends');
+app.use('/users', userRoutes); // Set up user routes
+app.use('/friends', friendRoutes); // Set up friend routes
+app.use('/messages', messageRoutes); // Set up message routes
 
+// Middleware for socket authentication
 io.use((socket, next) => {
+  // Verify JWT token for socket connections
   const token = socket.handshake.auth.token;
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
         return next(new Error('Authentication error'));
       }
-      socket.user_id = decoded.user_id;
+      socket.user_id = decoded.user_id; // Store user ID in the socket
       next();
     });
   } else {
@@ -71,16 +79,21 @@ io.use((socket, next) => {
   }
 });
 
+// Track online users
 const onlineUsers = new Map();
 
+// Socket.io event handling
 io.on('connection', (socket) => {
+  // When a new client connects
   logger.info(`New client connected, user_id: ${socket.user_id}`);
-  onlineUsers.set(socket.user_id, socket);
+  onlineUsers.set(socket.user_id, socket); // Store user's socket
 
+  // Set user's online status
   setUserOnlineStatus(socket.user_id, true).catch((error) => {
     logger.error(`Error setting user online status: ${error}`);
   });
 
+  // Joining/leaving rooms, sending/receiving messages, and disconnections
   socket.on('joinRoom', ({ roomId }) => {
     if (!roomId) {
       logger.error('joinRoom event called with undefined roomId');
@@ -150,15 +163,21 @@ io.on('connection', (socket) => {
   });
 });
 
+// Set up default route
 app.get('/', (req, res) => {
   res.send('EchoHub Server is running!');
 });
 
+// Serve static files (e.g., uploaded files)
+app.use('/uploads', express.static('uploads'));
+
+// Error handling middleware
 app.use((error, req, res, next) => {
   logger.error(`Unhandled exception: ${error.stack}`);
   res.status(500).send('Something broke!');
 });
 
+// Define the port for the server to listen on
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   logger.info(`Server listening on port ${PORT}`);

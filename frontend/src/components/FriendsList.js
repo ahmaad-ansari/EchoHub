@@ -1,32 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { Box, List, ListItem, Text, IconButton, useToast, HStack } from '@chakra-ui/react';
-
 import { ChatIcon, SmallCloseIcon } from '@chakra-ui/icons';
 
-
 const FriendsList = ({ onChatIconClick }) => {
-  const [friends, setFriends] = useState([]);
-  const toast = useToast();
+  const [friends, setFriends] = useState([]); // State to store friends data
+  const toast = useToast(); // Access to Chakra UI's toast notifications
 
+  // Fetch friends data when the component mounts or 'toast' changes
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
+        const token = localStorage.getItem('token'); // Retrieve token from localStorage
         const response = await fetch('http://localhost:5000/friends', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${token}`, // Attach token to request header
             'Content-Type': 'application/json'
           },
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP error! status: ${response.status}`); // Throw an error if the response is not successful
         }
 
-        const data = await response.json();
-        setFriends(data);
+        const data = await response.json(); // Parse the response data
+        setFriends(data); // Set friends data obtained from the server
       } catch (error) {
+        // Display an error toast notification if there's an issue fetching friends data
         toast({
           title: 'Error loading friends',
           description: error.toString(),
@@ -37,23 +37,23 @@ const FriendsList = ({ onChatIconClick }) => {
       }
     };
 
-    fetchFriends();
-  }, [toast]);
+    fetchFriends(); // Invoke the function to fetch friends
+  }, [toast]); // Dependency array to trigger the effect on 'toast' change
 
+  // Function to handle removal of a friend
   const removeFriendRequest = async (friendId) => {
     try {
       const response = await fetch(`http://localhost:5000/friends/remove`, {
         method: 'DELETE',
-        
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Attach token to request header
         },
-        body: JSON.stringify({ friend_id: friendId }), // Match the payload to what the backend expects
+        body: JSON.stringify({ friend_id: friendId }), // Send the friend ID to be removed
       });
-  
+
       if (response.ok) {
-        // The request was successful, handle the result here
+        // Display a success toast notification when a friend is successfully removed
         toast({
           title: 'Friend Removed',
           description: 'You have successfully removed the friend.',
@@ -62,12 +62,12 @@ const FriendsList = ({ onChatIconClick }) => {
           isClosable: true,
         });
       } else {
-        // The request was not successful, handle the error here
-        const errorData = await response.json(); // Ensure that the backend is designed to send a JSON response for errors as well
+        // Display an error toast notification if there's an issue removing the friend
+        const errorData = await response.json(); // Parse the error response data
         throw new Error(errorData.message || 'Could not remove the friend.');
       }
     } catch (error) {
-      // There was an error sending the request, handle it here
+      // Display an error toast notification if there's an issue with the request
       toast({
         title: 'Error',
         description: error.toString(),
@@ -94,14 +94,14 @@ const FriendsList = ({ onChatIconClick }) => {
                 <IconButton
                   aria-label="Unfriend"
                   icon={<SmallCloseIcon />}
-                  onClick={() => removeFriendRequest(friend.user_id)}
+                  onClick={() => removeFriendRequest(friend.user_id)} // Call the function to remove the friend
                   size="sm"
                   colorScheme="gray"
                 />
                 <IconButton
                   aria-label="Chat with friend"
                   icon={<ChatIcon />}
-                  onClick={() => onChatIconClick(friend.user_id, friend.username)}
+                  onClick={() => onChatIconClick(friend.user_id, friend.username)} // Trigger a chat with the friend
                   size="sm"
                   colorScheme="gray"
                 />

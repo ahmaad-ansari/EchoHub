@@ -7,20 +7,21 @@ import ChatPanel from '../components/ChatPanel';
 import { Grid, GridItem, Box, HStack, Button } from '@chakra-ui/react';
 
 const HomePage = () => {
+  // State variables to manage active tab and current chat user
   const [activeTab, setActiveTab] = useState('userList'); // Initial active component
   const [currentChatUser, setCurrentChatUser] = useState({
     id: null,
     username: null,
   });
 
-  // Here, we are setting a static currentUser object.
-  // In a real app, you would probably fetch this from an API or authentication context.
+  // Static currentUser object - replace this with actual user data from an API or context
   const [currentUser, setCurrentUser] = useState({
-    id: localStorage.getItem('user_id'), // Replace this with the actual user ID
-    name: localStorage.getItem('username'), // And the user's name or other properties as needed
+    id: localStorage.getItem('user_id'), // Replace with the actual user ID
+    name: localStorage.getItem('username'), // Replace with user's name or other properties
     // ... other user properties
   });
 
+  // Function to handle chat icon clicks, sets the current chat user
   const handleChatIconClick = (userId, username) => {
     setCurrentChatUser({
       id: userId,
@@ -33,7 +34,7 @@ const HomePage = () => {
     setActiveTab(tabName);
   };
 
-  // Render the active component based on the activeTab state
+  // Function to render the active tab content based on activeTab state
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'userList':
@@ -49,11 +50,15 @@ const HomePage = () => {
 
   return (
     <>
+      {/* Navbar component */}
       <Navbar />
+      {/* Main layout using Chakra-UI Grid */}
       <Grid templateColumns="repeat(5, 1fr)" gap={4} p={4}>
+        {/* Left Sidebar */}
         <GridItem colSpan={1} bg="gray.50">
           {/* Horizontal Tabs */}
           <HStack spacing={2} mb={4}>
+            {/* Buttons for switching tabs */}
             <Button onClick={() => changeTab('userList')} colorScheme="blue" variant={activeTab === 'userList' ? 'solid' : 'ghost'}>
               Find Friends
             </Button>
@@ -64,22 +69,20 @@ const HomePage = () => {
               Friends
             </Button>
           </HStack>
-          {/* Active Component */}
+          {/* Active Component based on selected tab */}
           <Box>
             {renderActiveTab()}
           </Box>
         </GridItem>
+        {/* Right-side Chat Panel */}
         <GridItem colSpan={4} bg="gray.100" p={4}>
-          {/* Chat Panel */}
-          {/* Ensure both currentUser and currentChatUser are defined before rendering ChatPanel */}
-          {
-            currentUser && currentChatUser && (
-              <ChatPanel
-                currentUser={currentUser}
-                currentChatUser={currentChatUser}
-              />
-            )
-          }
+          {/* Chat Panel - rendered only if both currentUser and currentChatUser are defined */}
+          {currentUser && currentChatUser && (
+            <ChatPanel
+              currentUser={currentUser}
+              currentChatUser={currentChatUser}
+            />
+          )}
         </GridItem>
       </Grid>
     </>

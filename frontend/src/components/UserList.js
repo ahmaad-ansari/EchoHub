@@ -1,4 +1,3 @@
-// src/components/UserList.js
 import React, { useState, useEffect } from 'react';
 import {
   Box,
@@ -12,10 +11,12 @@ import {
 import { AddIcon } from '@chakra-ui/icons';
 
 const UserList = () => {
+  // State to store the list of users
   const [users, setUsers] = useState([]);
-  const toast = useToast();
+  const toast = useToast(); // Chakra UI toast for displaying error/success messages
 
   useEffect(() => {
+    // Fetch users from the server when the component mounts or when the toast changes
     const fetchUsers = async () => {
       try {
         const response = await fetch('http://localhost:5000/users/all', {
@@ -25,11 +26,12 @@ const UserList = () => {
         });
         const data = await response.json();
         if (response.ok) {
-          setUsers(data);
+          setUsers(data); // Set the fetched user data into the state
         } else {
           throw new Error(data.message || 'Could not fetch users.');
         }
       } catch (error) {
+        // Display error toast if fetching users fails
         toast({
           title: 'Error',
           description: error.toString(),
@@ -40,24 +42,25 @@ const UserList = () => {
       }
     };
 
-    fetchUsers();
+    fetchUsers(); // Fetch users on component mount or when toast changes
   }, [toast]);
 
+  // Function to send a friend request to a specific user
   const sendFriendRequest = async (toUserId) => {
     try {
       const response = await fetch('http://localhost:5000/friends/request', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('token') // Ensure you have the token stored in localStorage
+          'Authorization': 'Bearer ' + localStorage.getItem('token') // Send request with the stored token
         },
-        body: JSON.stringify({ to_user_id: toUserId }), // Match the payload to what the backend expects
+        body: JSON.stringify({ to_user_id: toUserId }), // Body with the user ID to send the request
       });
   
       const data = await response.json();
   
       if (response.ok) {
-        // The request was successful, handle the result here
+        // Display success toast if the friend request is sent successfully
         toast({
           title: 'Friend Request Sent',
           description: `You have sent a friend request.`,
@@ -66,11 +69,11 @@ const UserList = () => {
           isClosable: true,
         });
       } else {
-        // The request was not successful, handle the error here
+        // Display error toast if sending the request fails
         throw new Error(data.message || 'Could not send friend request.');
       }
     } catch (error) {
-      // There was an error sending the request, handle it here
+      // Display error toast if there's an error sending the request
       toast({
         title: 'Error',
         description: error.toString(),
@@ -81,7 +84,7 @@ const UserList = () => {
     }
   };
   
-
+  // Render user list with the option to send a friend request
   return (
     <Box borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="sm" bg="white">
       <Text fontSize="xl" p={4} bg="gray.500" color="white" fontWeight="bold">
@@ -95,7 +98,7 @@ const UserList = () => {
               <IconButton
                 aria-label="Send friend request"
                 icon={<AddIcon />}
-                onClick={() => sendFriendRequest(user.user_id)}
+                onClick={() => sendFriendRequest(user.user_id)} // Send friend request on button click
                 size="sm"
                 colorScheme="gray"
               />

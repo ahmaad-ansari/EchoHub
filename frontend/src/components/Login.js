@@ -19,34 +19,37 @@ import { useNavigate } from 'react-router-dom';
 const Login = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const toast = useToast();
-  const navigate = useNavigate();
+  const toast = useToast(); // Toast notification from Chakra UI
+  const navigate = useNavigate(); // Navigation hook from react-router-dom
 
   const handleLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevent default form submission behavior
 
-    // Here you should call the backend API to perform the login
-    // This is a placeholder for the API call
     try {
+      // Fetch API call to perform user login
       const response = await fetch('http://localhost:5000/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password }), // Send username and password in the request body
       });
 
-      const data = await response.json();
+      const data = await response.json(); // Parse the response body
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to log in");
+        throw new Error(data.message || "Failed to log in"); // Throw an error if login fails
       }
       
-      localStorage.setItem('token', data.token); // Save the token
-      localStorage.setItem('user_id', data.user_id); // Save the token
-      localStorage.setItem('username', data.username); // Save the token
+      // Save user data to local storage upon successful login
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user_id', data.user_id);
+      localStorage.setItem('username', data.username);
+      localStorage.setItem('profile_image_url', data.profile_image_url);
+      // Call the onLoginSuccess function passed as a prop
       onLoginSuccess(data.token);
 
+      // Display a success toast notification
       toast({
         title: "Login successful",
         description: "You have successfully logged in.",
@@ -55,6 +58,7 @@ const Login = ({ onLoginSuccess }) => {
         isClosable: true,
       });
     } catch (error) {
+      // Display an error toast notification if login fails
       toast({
         title: 'Login Error',
         description: error.toString(),
@@ -82,8 +86,10 @@ const Login = ({ onLoginSuccess }) => {
         >
             Login
         </Text>
+        {/* Login form */}
         <form onSubmit={handleLogin}>
           <VStack spacing={4}>
+            {/* Username input */}
             <FormControl id="username" isRequired>
               <FormLabel>Username</FormLabel>
               <Input
@@ -93,6 +99,7 @@ const Login = ({ onLoginSuccess }) => {
                 placeholder="Enter username"
               />
             </FormControl>
+            {/* Password input */}
             <FormControl id="password" isRequired>
               <FormLabel>Password</FormLabel>
               <Input
@@ -102,6 +109,7 @@ const Login = ({ onLoginSuccess }) => {
                 placeholder="Enter password"
               />
             </FormControl>
+            {/* Submit button */}
             <Button
               type="submit"
               width="full"
@@ -112,6 +120,7 @@ const Login = ({ onLoginSuccess }) => {
             </Button>
           </VStack>
         </form>
+        {/* Link to registration page */}
         <Text mt={6} textAlign="center">
             Don't have an account?{" "}
             <Link

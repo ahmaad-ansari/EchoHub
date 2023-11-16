@@ -14,67 +14,84 @@ import {
 } from '@chakra-ui/react';
 import { ArrowForwardIcon, AttachmentIcon } from '@chakra-ui/icons';
 
+// Server URL for the socket connection
 const SOCKET_SERVER_URL = 'http://localhost:5000'; // Update with your server URL
 
 const ChatPanel = ({ currentChatUser, currentUser }) => {
+  // State to manage the messages in the chat
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState(''); // Corrected to be a string
+  // State to manage the current message being typed
+  const [message, setMessage] = useState('');
+  // Chakra UI's toast notification function
   const toast = useToast();
+  // Reference to manage the socket connection
   const socketRef = useRef();
-  
+
+  // Function to generate a room ID for the chat between two users
   function getRoomId(userId1, userId2) {
     // Ensure that userId1 is always the smaller ID to maintain consistency in room ID format
     return [userId1, userId2].sort((a, b) => a - b).join('_');
   }
-  
 
+  // Effect hook to manage socket connection and messages
   useEffect(() => {
+    // Flag to track if the component is mounted or not
     let isMounted = true;
-    if (currentUser && currentChatUser) {
-      const roomId = getRoomId(currentUser.id, currentChatUser.id); // Ensure proper IDs are used
 
+    // Check if both users are available
+    if (currentUser && currentChatUser) {
+      // Generate the room ID for the chat
+      const roomId = getRoomId(currentUser.id, currentChatUser.id);
+
+      // Initialize socket connection if it doesn't exist
       if (!socketRef.current) {
+        // Create a new socket connection with the server
         socketRef.current = io(SOCKET_SERVER_URL, {
           auth: {
-            token: localStorage.getItem('token'), // Ensure the token is available and valid
+            token: localStorage.getItem('token'), // Send authentication token in the socket connection
           },
         });
 
+        // Event listener for successful connection to the socket server
         socketRef.current.on('connect', () => {
           console.log('Connected to WebSocket server');
           // Join the chat room for the current user using the roomId
           socketRef.current.emit('joinRoom', { roomId });
-          // Fetch past messages
+          // Fetch past messages for the room
           socketRef.current.emit('getPastMessages', { roomId });
         });
 
+        // Event listener for receiving a new message
         socketRef.current.on('receiveMessage', (newMessage) => {
           if (isMounted) {
             setMessages((prevMessages) => [...prevMessages, newMessage]);
           }
         });
 
+        // Event listener for receiving past messages for the room
         socketRef.current.on('pastMessages', (fetchedMessages) => {
           if (isMounted) {
             setMessages(fetchedMessages);
           }
         });
 
+        // Event listener for socket connection error
         socketRef.current.on('connect_error', (error) => {
           console.error('Socket connection error:', error);
         });
 
+        // Event listener for generic socket errors
         socketRef.current.on('error', (error) => {
           console.error('Socket error:', error);
         });
       }
     }
 
-    // Clean up on component unmount or when currentChatUser.id changes
+    // Clean-up function on component unmount or when currentChatUser.id changes
     return () => {
       isMounted = false;
       if (socketRef.current) {
-        const roomId = getRoomId(currentUser.id, currentChatUser.id); // Ensure proper IDs are used
+        const roomId = getRoomId(currentUser.id, currentChatUser.id);
         // Leave the chat room using the roomId
         socketRef.current.emit('leaveRoom', { roomId });
         // Disconnect the socket
@@ -84,9 +101,11 @@ const ChatPanel = ({ currentChatUser, currentUser }) => {
     };
   }, [currentChatUser, currentUser]);
 
+  // Function to send a message
   const sendMessage = () => {
     // Check if currentUser is defined and has an id property
     if (!currentUser || !currentUser.id) {
+      // Display an error toast notification if user information is not available
       toast({
         title: 'Error',
         description: 'User information is not available',
@@ -96,8 +115,10 @@ const ChatPanel = ({ currentChatUser, currentUser }) => {
       });
       return;
     }
-  
+
+    // Check for empty message
     if (!message.trim()) {
+      // Display a warning toast notification for empty message
       toast({
         title: 'Cannot send empty message',
         status: 'warning',
@@ -106,15 +127,17 @@ const ChatPanel = ({ currentChatUser, currentUser }) => {
       });
       return;
     }
-  
-    const roomId = getRoomId(currentUser.id, currentChatUser.id); // Ensure proper IDs are used
-    // Emit message to server with roomId
+
+    // Get the roomId for the chat
+    const roomId = getRoomId(currentUser.id, currentChatUser.id);
+    // Emit the message to the server with roomId
     socketRef.current.emit('sendMessage', {
-      roomId: roomId, // This is expected on the server now
+      roomId: roomId,
       text: message,
     });
-  
-    setMessage(''); // Clear the input after sending
+
+    // Clear the input field after sending the message
+    setMessage('');
   };
 
   return (
@@ -149,7 +172,9 @@ const ChatPanel = ({ currentChatUser, currentUser }) => {
         overflowY="auto"
         flex={1}
       >
+        {/* Map through messages to display them */}
         {messages.map((msg, index) => {
+          // Check if the message is from the current user or the other user
           const isFromCurrentUser = String(msg.from_user_id) === String(currentUser.id);
           return (
             <Flex

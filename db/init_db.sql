@@ -14,13 +14,6 @@ CREATE TABLE friend_requests (
     status VARCHAR(20) DEFAULT 'pending' -- can be 'pending', 'accepted', 'declined'
 );
 
--- Create contacts table
-CREATE TABLE contacts (
-    user_id INTEGER REFERENCES users(user_id),
-    friend_user_id INTEGER REFERENCES users(user_id),
-    PRIMARY KEY (user_id, friend_user_id)
-);
-
 -- Create messages table
 CREATE TABLE messages (
     message_id SERIAL PRIMARY KEY,

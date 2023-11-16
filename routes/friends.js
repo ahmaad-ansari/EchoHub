@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../db/index'); // Adjust the path as necessary
-const auth = require('../middleware/auth');
+const pool = require('../db/index'); // Importing the database connection - ensure the path is correct
+const auth = require('../middleware/auth'); // Importing authentication middleware
 
+// POST /friends/request - Send a friend request
 router.post('/request', auth, async (req, res) => {
     const { to_user_id } = req.body; // ID of the user to whom the request is sent
     const from_user_id = req.user.user_id; // ID of the user sending the request, obtained from auth middleware
@@ -29,7 +30,7 @@ router.post('/request', auth, async (req, res) => {
             [from_user_id, to_user_id]
         );
 
-        res.json(newRequest.rows[0]);
+        res.json(newRequest.rows[0]); // Respond with details of the sent friend request
     } catch (error) {
         console.error(error.message);
         res.status(500).send('Server Error');
@@ -62,8 +63,6 @@ router.post('/accept', auth, async (req, res) => {
             ['accepted', request_id]
         );
 
-        // No need to insert into a 'friendships' table since you didn't mention one exists
-
         // Commit the transaction
         await pool.query('COMMIT');
 
@@ -75,6 +74,7 @@ router.post('/accept', auth, async (req, res) => {
     }
 });
 
+// DELETE /friends/reject - Reject a friend request
 router.delete('/reject', auth, async (req, res) => {
     const { request_id } = req.body; // ID of the friend request
     const user_id = req.user.user_id; // Authenticated user ID from the token
@@ -104,8 +104,9 @@ router.delete('/reject', auth, async (req, res) => {
     }
 });
 
+// DELETE /friends/remove - Remove a friend
 router.delete('/remove', auth, async (req, res) => {
-    const { friend_id } = req.body; // ID of the friend request
+    const { friend_id } = req.body; // ID of the friend to remove
     const user_id = req.user.user_id; // Authenticated user ID from the token
 
     try {
@@ -142,7 +143,6 @@ router.delete('/remove', auth, async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
-
 
 // GET /friends - List all friends
 router.get('/', auth, async (req, res) => {

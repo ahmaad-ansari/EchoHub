@@ -1,4 +1,3 @@
-// src/components/UserList.js
 import React, { useState, useEffect } from 'react';
 import {
   Box,
@@ -14,26 +13,30 @@ import {
 import { CheckIcon, SmallCloseIcon, TimeIcon } from '@chakra-ui/icons';
 
 const FriendRequests = () => {
+  // State variables to manage the list of friend requests and the current user ID
   const [users, setUsers] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
-  const toast = useToast();
+  const toast = useToast(); // Chakra UI's toast notification function
 
   useEffect(() => {
-    setCurrentUserId(localStorage.getItem('user_id'));
+    setCurrentUserId(localStorage.getItem('user_id')); // Retrieve and set the current user's ID
     const fetchUsers = async () => {
       try {
+        // Fetch friend requests from the server using the user's token
         const response = await fetch('http://localhost:5000/friends/requests', {
           headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('token')
+            'Authorization': 'Bearer ' + localStorage.getItem('token') // Include the user's token in the request header
           }
         });
-        const data = await response.json();
+        const data = await response.json(); // Parse the response data
+
         if (response.ok) {
-          setUsers(data);
+          setUsers(data); // Set the list of friend requests received from the server
         } else {
-          throw new Error(data.message || 'Could not fetch users.');
+          throw new Error(data.message || 'Could not fetch users.'); // Throw an error if fetching fails
         }
       } catch (error) {
+        // Display an error toast notification if there's an issue fetching friend requests
         toast({
           title: 'Error',
           description: error.toString(),
@@ -44,24 +47,25 @@ const FriendRequests = () => {
       }
     };
 
-    fetchUsers();
-  }, [toast]);
+    fetchUsers(); // Invoke the function to fetch friend requests
+  }, [toast]); // Re-fetch friend requests if the 'toast' function changes
 
+  // Function to accept a friend request
   const acceptFriendRequest = async (requestId) => {
     try {
       const response = await fetch('http://localhost:5000/friends/accept', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('token') // Ensure you have the token stored in localStorage
+          'Authorization': 'Bearer ' + localStorage.getItem('token') // Include the user's token in the request header
         },
-        body: JSON.stringify({ request_id: requestId }), // Match the payload to what the backend expects
+        body: JSON.stringify({ request_id: requestId }), // Send the request ID to the server
       });
-  
-      const data = await response.json();
-  
+
+      const data = await response.json(); // Parse the response data
+
       if (response.ok) {
-        // The request was successful, handle the result here
+        // Display a success toast notification when a friend request is accepted
         toast({
           title: 'Friend Request Accepted',
           description: `You have accepted a friend request.`,
@@ -70,11 +74,11 @@ const FriendRequests = () => {
           isClosable: true,
         });
       } else {
-        // The request was not successful, handle the error here
+        // Display an error toast notification if there's an issue accepting the friend request
         throw new Error(data.message || 'Could not accept friend request.');
       }
     } catch (error) {
-      // There was an error sending the request, handle it here
+      // Display an error toast notification if there's an issue with the request
       toast({
         title: 'Error',
         description: error.toString(),
@@ -85,21 +89,22 @@ const FriendRequests = () => {
     }
   };
 
+  // Function to reject a friend request
   const rejectFriendRequest = async (requestId) => {
     try {
       const response = await fetch('http://localhost:5000/friends/reject', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('token') // Ensure you have the token stored in localStorage
+          'Authorization': 'Bearer ' + localStorage.getItem('token') // Include the user's token in the request header
         },
-        body: JSON.stringify({ request_id: requestId }), // Match the payload to what the backend expects
+        body: JSON.stringify({ request_id: requestId }), // Send the request ID to the server
       });
-  
-      const data = await response.json();
-  
+
+      const data = await response.json(); // Parse the response data
+
       if (response.ok) {
-        // The request was successful, handle the result here
+        // Display a success toast notification when a friend request is rejected
         toast({
           title: 'Friend Request Rejected',
           description: `You have rejected a friend request.`,
@@ -108,11 +113,11 @@ const FriendRequests = () => {
           isClosable: true,
         });
       } else {
-        // The request was not successful, handle the error here
+        // Display an error toast notification if there's an issue rejecting the friend request
         throw new Error(data.message || 'Could not reject friend request.');
       }
     } catch (error) {
-      // There was an error sending the request, handle it here
+      // Display an error toast notification if there's an issue with the request
       toast({
         title: 'Error',
         description: error.toString(),
@@ -122,7 +127,6 @@ const FriendRequests = () => {
       });
     }
   };
-  
 
   return (
     <Box borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="sm" bg="white">
@@ -139,6 +143,7 @@ const FriendRequests = () => {
 
               <Flex>
                 {user.from_user_id.toString() === currentUserId ? (
+                  // Display a time icon for pending friend requests
                   <IconButton
                     aria-label='Pending'
                     icon={<TimeIcon />}
@@ -147,6 +152,7 @@ const FriendRequests = () => {
                     variant="ghost"
                   />
                 ) : (
+                  // Display accept and reject buttons for received friend requests
                   <>
                     <IconButton
                       aria-label="Reject friend request"
